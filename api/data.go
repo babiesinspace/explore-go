@@ -1,6 +1,8 @@
 package api
 
 import "database/sql"
+import "fmt"
+import "log"
 
 type DataManager struct {
 	DB *sql.DB
@@ -33,5 +35,30 @@ func (dm *DataManager) generateRecommendations(userID int) ([]*Recommendation, e
 
 func (dm *DataManager) likes(userID int) ([]*Like, error) {
 	// TODO: Finish me!
-	return nil, nil
+	rows, err := dm.DB.Query("SELECT id, sender_id, receiver_id, comment, created FROM like WHERE receiver_id=?", userID)
+    if err != nil {
+ 		return nil, err
+    }
+	defer rows.Close()
+
+    out := make([]*Like, 0)
+
+    for rows.Next() {
+    	like := new(Like)
+        err := rows.Scan(&like.ID, &like.SenderID, &like.ReceiverID, &like.Comment, &like.Created)
+        if err != nil {
+            log.Fatal(err)
+        }
+        fmt.Printf("%s, %s, %s, £%.2f\n", like.ID, like.SenderID, like.ReceiverID, like.Comment, like.Created)
+        out = append(out, like)
+    }
+    if err := rows.Err(); err != nil {
+        log.Fatal(err)
+    }
+    for _, like := range out {
+    	fmt.Printf("%s, %s, %s, %s", like.ID, like.SenderID, like.ReceiverID, like.Comment, like.Created)
+  	}
+  	
+	return out, nil
 }
+

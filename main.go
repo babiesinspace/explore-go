@@ -21,6 +21,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Get("/", server.StatusHandler)
 	r.Get("/recommendations/{userID}", server.RecommendationsHandler)
+	r.Get("/likes/{userID}", server.LikesHandler)
 
 	fmt.Println("Your app is now serving at 127.0.0.1:8080")
 
