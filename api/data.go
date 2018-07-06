@@ -35,7 +35,7 @@ func (dm *DataManager) generateRecommendations(userID int) ([]*Recommendation, e
 
 func (dm *DataManager) likes(userID int) ([]*Like, error) {
 	// TODO: Finish me!
-	rows, err := dm.DB.Query("SELECT id, senderId, receiverId, comment, created FROM likes WHERE receiverId=?", userID)
+	rows, err := dm.DB.Query("SELECT id, sender_id, receiver_id, comment, created FROM like WHERE receiver_id=?", userID)
     if err != nil {
  		return nil, err
     }
